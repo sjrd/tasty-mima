@@ -178,6 +178,13 @@ class AnalyzeSuite extends munit.FunSuite:
       PM.IncompatibleTypeChange("testlib.typetranslations.TypeTranslations.Tests.andTypeChanged")
     )
   }
+
+  test("visibility changes") {
+    val problems = problemsInPackage("visibilitychanges")
+
+    assertProblems(problems)(
+    )
+  }
 end AnalyzeSuite
 
 object AnalyzeSuite:
@@ -202,6 +209,12 @@ object AnalyzeSuite:
         case Problem.MissingTermMember(info) => info.toString() == fullName
         case _                               => false
     end MissingTermMember
+
+    final case class RestrictedVisibilityChange(fullName: String) extends ProblemMatcher:
+      def apply(problem: Problem): Boolean = problem match
+        case Problem.RestrictedVisibilityChange(info, _, _) => info.toString() == fullName
+        case _ => false
+    end RestrictedVisibilityChange
 
     final case class IncompatibleKindChange(fullName: String, oldKind: SymbolKind, newKind: SymbolKind)
         extends ProblemMatcher:
